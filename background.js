@@ -8,12 +8,23 @@
 	chrome.tabs.onUpdated.addListener(function(id, info, tab) {
 		
 		if( currentdomain != extractHostname( tab.url ) )  {
-			analysed_time = [
-				currentdomain,
-				timer
-			];
-			currentdomain = extractHostname( tab.url );
-			timer = 0;
+			
+			if( ValidURL( extractHostname( tab.url ) ) ) {
+				currentdomain = extractHostname( tab.url );
+				timer = 0;
+				count = 1;
+				
+				//Get Local Data
+				chrome.storage.local.get([currentdomain], function(result) {
+					
+					if( result[currentdomain] != undefined ) {
+						timer = parseInt( result[currentdomain] );
+					}
+					
+				});
+				
+			}
+			
 		}
 		
 	});
